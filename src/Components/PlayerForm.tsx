@@ -1,12 +1,13 @@
 import { FormEvent, useCallback, useRef } from 'react'
-import { Player } from '../App'
 import { generateUniqueId } from '../Utils'
+import { Player } from '../Types'
 
-const Form: React.FC<{ addPlayer: (newPlayer: Player) => void }> = ({
-    addPlayer,
-}) => {
+const PlayerForm: React.FC<{
+    addPlayer: (newPlayer: Player) => void
+}> = ({ addPlayer }) => {
     const nameRef = useRef<HTMLInputElement>(null)
     const scoreRef = useRef<HTMLInputElement>(null)
+
     const onSubmit = useCallback(
         (e: FormEvent) => {
             e.preventDefault()
@@ -25,18 +26,29 @@ const Form: React.FC<{ addPlayer: (newPlayer: Player) => void }> = ({
         [nameRef, scoreRef]
     )
     return (
-        <form onSubmit={onSubmit} style={{ marginBottom: '1em' }}>
-            <input
-                type="text"
-                ref={nameRef}
-                placeholder="name"
-                required
-                autoFocus
-            />
-            <input type="number" ref={scoreRef} placeholder="score" required />
-            <button>add</button>
+        <form onSubmit={onSubmit} style={{ margin: '.5em auto' }}>
+            <fieldset>
+                <legend>Add player</legend>
+
+                <input
+                    type="text"
+                    ref={nameRef}
+                    placeholder="name"
+                    required
+                    autoFocus
+                    style={{ width: '10em' }}
+                />
+                <input
+                    type="number"
+                    ref={scoreRef}
+                    placeholder="score"
+                    required
+                    style={{ width: '5em' }}
+                />
+                <button>add</button>
+            </fieldset>
         </form>
     )
 }
 
-export default Form
+export default PlayerForm

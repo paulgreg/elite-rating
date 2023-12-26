@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import { Player, Players } from '../App'
+import { MouseEvent, useCallback } from 'react'
+import { Player, Players } from '../Types'
 
 const Row: React.FC<{
     player: Player
@@ -7,7 +7,7 @@ const Row: React.FC<{
     delPlayer: (id: string) => void
 }> = ({ player, position, delPlayer }) => {
     const onTraskClick = useCallback(
-        (player: Player) => (e: any) => {
+        (player: Player) => (e: MouseEvent<HTMLSpanElement>) => {
             e.stopPropagation()
             if (confirm(`Are you sure to delete ${player.name} ?`)) {
                 delPlayer(player.id)
@@ -17,7 +17,7 @@ const Row: React.FC<{
     )
     return (
         <>
-            <span>{position + 1}</span>
+            <span style={{ fontWeight: 'bold' }}>{position + 1}</span>
             <span>{player.name}</span>
             <span>{player.score}</span>
             <span style={{ cursor: 'pointer' }} onClick={onTraskClick(player)}>
@@ -27,13 +27,20 @@ const Row: React.FC<{
     )
 }
 
-const Table: React.FC<{
+const PlayersList: React.FC<{
     players: Players
     delPlayer: (id: string) => void
 }> = ({ players, delPlayer }) => {
+    if (!players?.length) return <></>
     return (
         <div
-            style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr 1fr' }}
+            style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 2fr 1fr 1fr',
+                margin: '1em auto',
+                border: '2px solid gold',
+                padding: '.5em',
+            }}
         >
             {players
                 .sort((p1, p2) => p2.score - p1.score)
@@ -49,4 +56,4 @@ const Table: React.FC<{
     )
 }
 
-export default Table
+export default PlayersList

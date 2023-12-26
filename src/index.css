@@ -37,6 +37,11 @@ h1 {
 input {
     font-size: 1.1em;
 }
+input + input,
+input + button,
+button + button {
+    margin-left: 1em;
+}
 
 button {
     border-radius: 8px;
