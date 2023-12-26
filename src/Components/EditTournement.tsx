@@ -1,4 +1,10 @@
-import { ChangeEvent, MouseEvent, useCallback, useState } from 'react'
+import {
+    ChangeEvent,
+    MouseEvent,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react'
 import { Player, Players, Tournement } from '../Types'
 import PlayersList from './PlayersList'
 import PlayerForm from './PlayerForm'
@@ -7,11 +13,23 @@ const EditTournement: React.FC<{
     currentTournement: Tournement
     saveTournement: (tournement: Tournement) => void
     deleteTournement: (id: string) => void
-}> = ({ currentTournement, saveTournement, deleteTournement }) => {
+    resetTournement: () => void
+}> = ({
+    currentTournement,
+    saveTournement,
+    deleteTournement,
+    resetTournement,
+}) => {
     const id = currentTournement.id
-    const [date, setDate] = useState<string>(currentTournement.date)
-    const [name, setName] = useState<string>(currentTournement.name)
-    const [players, setPlayers] = useState<Players>(currentTournement.players)
+    const [date, setDate] = useState<string>('')
+    const [name, setName] = useState<string>('')
+    const [players, setPlayers] = useState<Players>([])
+
+    useEffect(() => {
+        setDate(currentTournement.date)
+        setName(currentTournement.name)
+        setPlayers(currentTournement.players)
+    }, [currentTournement, setDate, setName, setPlayers])
 
     const addPlayer = useCallback(
         (newPlayer: Player) => {
@@ -39,6 +57,15 @@ const EditTournement: React.FC<{
             }
         },
         [saveTournement, date, name, players]
+    )
+
+    const onCloseClick = useCallback(
+        (e: MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault()
+            e.stopPropagation()
+            resetTournement()
+        },
+        [resetTournement]
     )
 
     const onDeleteClick = useCallback(
@@ -100,8 +127,9 @@ const EditTournement: React.FC<{
             </form>
             <PlayerForm addPlayer={addPlayer} />
             <PlayersList players={players} delPlayer={delPlayer} />
-            <button onClick={onDeleteClick}>delete</button>
-            <button onClick={onSaveClick}>save</button>
+            <button onClick={onDeleteClick}>🗑️ delete</button>
+            <button onClick={onSaveClick}>💾 save</button>
+            <button onClick={onCloseClick}>✖️ close</button>
         </div>
     )
 }

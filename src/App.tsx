@@ -58,6 +58,10 @@ function App() {
         setCurrentTournement(tournement)
     }, [])
 
+    const resetTournement = useCallback(() => {
+        setCurrentTournement(null)
+    }, [])
+
     const saveTournement = useCallback(
         (tournement: Tournement) => {
             const newTournements = tournements.find(
@@ -108,6 +112,7 @@ function App() {
                     currentTournement={currentTournement}
                     saveTournement={saveTournement}
                     deleteTournement={deleteTournement}
+                    resetTournement={resetTournement}
                 />
             )}
         </>
