@@ -1,0 +1,30 @@
+{
+    "name": "Elite Rating",
+    "short_name": "Rating",
+    "start_url": "./",
+    "display": "standalone",
+    "theme_color": "#fc997c",
+    "background_color": "#2e4c6d",
+    "icons": [
+        {
+            "src": "bar-chart-128.png",
+            "type": "image/png",
+            "sizes": "128x128 64x64 32x32 24x24 16x16"
+        },
+        {
+            "src": "bar-chart-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "bar-chart-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "bar-chart.svg",
+            "sizes": "any",
+            "type": "image/svg"
+        }
+    ]
+}
