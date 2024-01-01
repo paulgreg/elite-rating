@@ -10,8 +10,9 @@ const SAVE_KEY = 'tournements.json'
 
 function App() {
     const [tournements, setTournements] = useState<Tournements>([])
-    const [currentTournement, setCurrentTournement] =
-        useState<Tournement | null>(null)
+    const [currentTournement, setCurrentTournement] = useState<
+        Tournement | undefined
+    >()
 
     const saveOnline = useCallback(
         (data: Tournements) =>
@@ -49,17 +50,22 @@ function App() {
             setTournements((tournements) =>
                 tournements.filter((t) => t.id !== id)
             )
-            setCurrentTournement(null)
+            setCurrentTournement(undefined)
         },
         [setTournements, setCurrentTournement]
     )
 
-    const onSetTournement = useCallback((tournement: Tournement) => {
-        setCurrentTournement(tournement)
-    }, [])
+    const onSetTournement = useCallback(
+        (tournementId: string) => {
+            setCurrentTournement(
+                tournements.find(({ id }) => tournementId === id)
+            )
+        },
+        [tournements]
+    )
 
     const resetTournement = useCallback(() => {
-        setCurrentTournement(null)
+        setCurrentTournement(undefined)
     }, [])
 
     const saveTournement = useCallback(
@@ -71,9 +77,10 @@ function App() {
                       t.id === tournement.id ? tournement : t
                   )
                 : tournements.concat(tournement)
+
             setTournements(newTournements)
             saveOnline(newTournements)
-            setCurrentTournement(null)
+            setCurrentTournement(undefined)
         },
         [tournements, setCurrentTournement, setTournements, saveOnline]
     )

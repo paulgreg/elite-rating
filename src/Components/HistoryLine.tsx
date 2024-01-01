@@ -3,12 +3,12 @@ import { Tournement, Tournements } from '../Types'
 
 const TournementPoint: React.FC<{
     tournement: Tournement
-    onSetTournement: (tournement: Tournement) => void
+    onSetTournement: (tournementId: string) => void
 }> = ({ tournement, onSetTournement }) => {
     const onDivClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
-            onSetTournement(tournement)
+            onSetTournement(tournement.id)
         },
         [onSetTournement]
     )
@@ -30,13 +30,14 @@ const TournementPoint: React.FC<{
 
 const HistoryLine: React.FC<{
     tournements: Tournements
-    onSetTournement: (tournement: Tournement) => void
+    onSetTournement: (tournementId: string) => void
     onAddTournement: () => void
 }> = ({ tournements, onSetTournement, onAddTournement }) => {
     const onPlusClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         onAddTournement()
     }, [])
+
     return (
         <div
             style={{
