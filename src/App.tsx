@@ -47,12 +47,12 @@ function App() {
 
     const deleteTournement = useCallback(
         (id: string) => {
-            setTournements((tournements) =>
-                tournements.filter((t) => t.id !== id)
-            )
+            const newTournements = tournements.filter((t) => t.id !== id)
+            setTournements(newTournements)
+            saveOnline(newTournements)
             setCurrentTournement(undefined)
         },
-        [setTournements, setCurrentTournement]
+        [tournements, setTournements, setCurrentTournement]
     )
 
     const onSetTournement = useCallback(
