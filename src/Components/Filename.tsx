@@ -1,11 +1,4 @@
-import {
-    ChangeEvent,
-    FormEvent,
-    MouseEvent,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react'
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
 
 const LOCALSTORAGE_FILEMAME_KEY = 'eliterating_filename'
 
@@ -24,26 +17,21 @@ const Filename: React.FC<{
         }
     }, [setFilename, onLoadFilename])
 
-    const onFormSubmit = useCallback((e: FormEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-    }, [])
+    const onFormSubmit = useCallback(
+        (e: FormEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onLoadFilename(filename)
+            localStorage.setItem(LOCALSTORAGE_FILEMAME_KEY, filename)
+        },
+        [filename, onLoadFilename]
+    )
 
     const onFileNameChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             setFilename(e.target.value)
         },
         [setFilename]
-    )
-
-    const onLoadButton = useCallback(
-        (e: MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation()
-            e.preventDefault()
-            onLoadFilename(filename)
-            localStorage.setItem(LOCALSTORAGE_FILEMAME_KEY, filename)
-        },
-        [filename, onLoadFilename]
     )
 
     return (
@@ -61,7 +49,7 @@ const Filename: React.FC<{
                         onChange={onFileNameChange}
                     />
                 </label>{' '}
-                <button onClick={onLoadButton}>load</button>
+                <input type="submit" value="load" />
             </fieldset>
         </form>
     )
