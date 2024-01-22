@@ -47,13 +47,18 @@ const HistoryLine: React.FC<{
                 justifyContent: 'center',
             }}
         >
-            {tournements.map((tournement) => (
-                <TournementPoint
-                    key={tournement.id}
-                    tournement={tournement}
-                    onSetTournement={onSetTournement}
-                />
-            ))}
+            {tournements
+                .sort(
+                    (a, b) =>
+                        new Date(a.date).getTime() - new Date(b.date).getTime()
+                )
+                .map((tournement) => (
+                    <TournementPoint
+                        key={tournement.id}
+                        tournement={tournement}
+                        onSetTournement={onSetTournement}
+                    />
+                ))}
             <button onClick={onPlusClick}>➕ new tournement</button>
         </div>
     )
