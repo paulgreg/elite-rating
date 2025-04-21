@@ -44,7 +44,6 @@ const HistoryLine: React.FC<{
                 display: 'flex',
                 marginTop: '1em',
                 overflowX: 'auto',
-                justifyContent: 'center',
             }}
         >
             {tournements
