@@ -15,7 +15,7 @@ const PlayerForm: React.FC<{
                 const newPlayer: Player = {
                     id: generateUniqueId(),
                     name: nameRef.current.value,
-                    score: parseInt(scoreRef.current.value, 10),
+                    score: parseFloat(scoreRef.current.value),
                 }
                 addPlayer(newPlayer)
                 nameRef.current.value = ''
@@ -40,6 +40,7 @@ const PlayerForm: React.FC<{
                 />
                 <input
                     type="number"
+                    step="0.01"
                     ref={scoreRef}
                     placeholder="score"
                     required
