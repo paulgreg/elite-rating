@@ -89,7 +89,6 @@ function App() {
 
             setTournements(newTournements)
             saveOnline(filename, newTournements)
-            setCurrentTournement(undefined)
         },
         [
             filename,

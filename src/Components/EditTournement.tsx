@@ -46,18 +46,9 @@ const EditTournement: React.FC<{
         [setPlayers]
     )
 
-    const onSaveClick = useCallback(
-        (e: MouseEvent<HTMLButtonElement>) => {
-            e.preventDefault()
-            e.stopPropagation()
-            if (!date) {
-                alert('Please select a date')
-            } else {
-                saveTournement({ id, date, name, players })
-            }
-        },
-        [saveTournement, date, name, players]
-    )
+    useEffect(() => {
+        saveTournement({ id, date, name, players })
+    }, [id, date, name, players])
 
     const onCloseClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
@@ -128,7 +119,6 @@ const EditTournement: React.FC<{
             <PlayerForm addPlayer={addPlayer} />
             <PlayersList players={players} delPlayer={delPlayer} />
             <button onClick={onDeleteClick}>🗑️ delete</button>
-            <button onClick={onSaveClick}>💾 save</button>
             <button onClick={onCloseClick}>✖️ close</button>
         </div>
     )
