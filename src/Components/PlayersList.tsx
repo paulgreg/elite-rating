@@ -5,7 +5,8 @@ const Row: React.FC<{
     player: Player
     position: number
     delPlayer: (id: string) => void
-}> = ({ player, position, delPlayer }) => {
+    editPlayer: (player: Player) => void
+}> = ({ player, position, delPlayer, editPlayer }) => {
     const onTraskClick = useCallback(
         (player: Player) => (e: MouseEvent<HTMLSpanElement>) => {
             e.stopPropagation()
@@ -15,11 +16,21 @@ const Row: React.FC<{
         },
         [delPlayer]
     )
+    const onEditClick = useCallback(
+        (player: Player) => (e: MouseEvent<HTMLSpanElement>) => {
+            e.stopPropagation()
+            editPlayer(player)
+        },
+        [editPlayer]
+    )
     return (
         <>
             <span style={{ fontWeight: 'bold' }}>{position + 1}</span>
             <span>{player.name}</span>
             <span>{player.score}</span>
+            <span style={{ cursor: 'pointer' }} onClick={onEditClick(player)}>
+                ✏️
+            </span>
             <span style={{ cursor: 'pointer' }} onClick={onTraskClick(player)}>
                 🗑️
             </span>
@@ -30,13 +41,14 @@ const Row: React.FC<{
 const PlayersList: React.FC<{
     players: Players
     delPlayer: (id: string) => void
-}> = ({ players, delPlayer }) => {
+    editPlayer: (player: Player) => void
+}> = ({ players, delPlayer, editPlayer }) => {
     if (!players?.length) return <></>
     return (
         <div
             style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 2fr 1fr 1fr',
+                gridTemplateColumns: '1fr 2fr 1fr 1fr 1fr',
                 margin: '1em auto',
                 border: '2px solid gold',
                 padding: '.5em',
@@ -50,6 +62,7 @@ const PlayersList: React.FC<{
                         player={player}
                         position={idx}
                         delPlayer={delPlayer}
+                        editPlayer={editPlayer}
                     />
                 ))}
         </div>

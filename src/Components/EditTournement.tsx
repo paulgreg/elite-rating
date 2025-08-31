@@ -24,6 +24,7 @@ const EditTournement: React.FC<{
     const [date, setDate] = useState<string>('')
     const [name, setName] = useState<string>('')
     const [players, setPlayers] = useState<Players>([])
+    const [currentPlayer, setCurrentPlayer] = useState<Player>()
 
     useEffect(() => {
         setDate(currentTournement.date)
@@ -31,12 +32,35 @@ const EditTournement: React.FC<{
         setPlayers(currentTournement.players)
     }, [currentTournement, setDate, setName, setPlayers])
 
-    const addPlayer = useCallback(
-        (newPlayer: Player) => {
-            setPlayers((players) => players.concat(newPlayer))
+    const addOrEditPlayer = useCallback(
+        (newOrExistingPlayer: Player) => {
+            if (players.find((c) => c.id === newOrExistingPlayer.id)) {
+                setPlayers((players) =>
+                    players.map((c) =>
+                        c.id === newOrExistingPlayer.id
+                            ? {
+                                  ...c,
+                                  name: newOrExistingPlayer.name,
+                                  score: newOrExistingPlayer.score,
+                              }
+                            : c
+                    )
+                )
+            } else {
+                setPlayers((players) => players.concat(newOrExistingPlayer))
+            }
+            setCurrentPlayer(undefined)
         },
-        [setPlayers]
+        [players, setPlayers]
     )
+
+    const editPlayer = useCallback(
+        (player: Player) => {
+            setCurrentPlayer(player)
+        },
+        [setCurrentPlayer]
+    )
+
     const delPlayer = useCallback(
         (idToRemove: string) => {
             setPlayers((players) =>
@@ -116,8 +140,15 @@ const EditTournement: React.FC<{
                     />
                 </fieldset>
             </form>
-            <PlayerForm addPlayer={addPlayer} />
-            <PlayersList players={players} delPlayer={delPlayer} />
+            <PlayerForm
+                addOrEditPlayer={addOrEditPlayer}
+                currentPlayer={currentPlayer}
+            />
+            <PlayersList
+                players={players}
+                delPlayer={delPlayer}
+                editPlayer={editPlayer}
+            />
             <button onClick={onDeleteClick}>🗑️ delete</button>
             <button onClick={onCloseClick}>✖️ close</button>
         </div>
