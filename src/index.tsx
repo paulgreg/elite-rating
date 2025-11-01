@@ -13,7 +13,7 @@ if (container) {
         <React.StrictMode>
             <BrowserRouter
                 basename={
-                    process.env.NODE_ENV === 'production' ? '/eliterating' : ''
+                    process.env.NODE_ENV === 'production' ? '/elite-rating' : ''
                 }
             >
                 <Routes>
