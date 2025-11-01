@@ -1,27 +1,14 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
-
-const LOCALSTORAGE_FILEMAME_KEY = 'eliterating_filename'
+import { ChangeEvent, FormEvent, useCallback, useState } from 'react'
 
 const Filename: React.FC<{
     onLoadFilename: (name: string) => void
 }> = ({ onLoadFilename }) => {
     const [filename, setFilename] = useState('')
 
-    useEffect(() => {
-        const localStorageFilename = localStorage.getItem(
-            LOCALSTORAGE_FILEMAME_KEY
-        )
-        if (localStorageFilename) {
-            setFilename(localStorageFilename)
-            onLoadFilename(localStorageFilename)
-        }
-    }, [setFilename, onLoadFilename])
-
     const onFormSubmit = useCallback(
         (e: FormEvent) => {
             e.preventDefault()
             e.stopPropagation()
-            localStorage.setItem(LOCALSTORAGE_FILEMAME_KEY, filename)
             onLoadFilename(filename)
         },
         [filename, onLoadFilename]

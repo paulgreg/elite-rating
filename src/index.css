@@ -13,13 +13,13 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+a,
+a.visied {
     font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
+    color: #5d64ed;
 }
 a:hover {
-    color: #535bf2;
+    color: #9babd6;
 }
 
 body {
@@ -62,19 +62,23 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
+ol {
+    list-style: decimal-leading-zero;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
         background-color: #ffffff;
     }
-    a:hover {
+    a,
+    a:visited {
         color: #747bff;
+    }
+    a:hover {
+        color: var(--color);
     }
     button {
         background-color: #f9f9f9;
     }
-}
-
-ol {
-    list-style: decimal-leading-zero;
 }
