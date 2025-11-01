@@ -69,6 +69,28 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
         setCurrentTournementId(undefined)
     }, [])
 
+    const duplicateCurrentTournement = useCallback(() => {
+        if (!currentTournement) return
+
+        const yPlayers = new Y.Array<Y.Map<YPlayer>>()
+        const yP = currentTournement.players.map(({ name, score }) => {
+            const yPlayer = new Y.Map<YPlayer>()
+            yPlayer.set('id', generateUniqueId())
+            yPlayer.set('name', name)
+            yPlayer.set('score', score)
+            return yPlayer
+        })
+        yPlayers.push(yP)
+
+        const yTournement = new Y.Map<YTournement>()
+        yTournement.set('id', generateUniqueId())
+        yTournement.set('name', currentTournement.name)
+        yTournement.set('date', currentTournement.date)
+        yTournement.set('players', yPlayers)
+
+        yTournements.push([yTournement])
+    }, [currentTournement, yTournements])
+
     const addTournement = useCallback(() => {
         const yTournement = new Y.Map<YTournement>()
         yTournement.set('id', generateUniqueId())
@@ -185,6 +207,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             deleteTournement,
             setCurrentTournement,
             resetCurrentTournement,
+            duplicateCurrentTournement,
             updateTournementDate,
             updateTournementName,
             addTournementPlayer,
@@ -199,6 +222,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             deleteTournement,
             setCurrentTournement,
             resetCurrentTournement,
+            duplicateCurrentTournement,
             updateTournementDate,
             updateTournementName,
             addTournementPlayer,

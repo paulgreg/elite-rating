@@ -7,6 +7,7 @@ const EditTournement = () => {
     const {
         currentTournement,
         resetCurrentTournement,
+        duplicateCurrentTournement,
         deleteTournement,
         updateTournementDate,
         updateTournementName,
@@ -82,6 +83,7 @@ const EditTournement = () => {
                     />
                 </fieldset>
             </form>
+            <button onClick={duplicateCurrentTournement}>duplicate</button>
             <PlayerForm />
             <PlayersList />
             <button onClick={onDeleteClick}>🗑️ delete</button>

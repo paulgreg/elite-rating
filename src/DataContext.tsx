@@ -8,6 +8,7 @@ export type DataContextType = {
     deleteTournement: (tournementId: string) => void
     setCurrentTournement: (tournementId: string) => void
     resetCurrentTournement: () => void
+    duplicateCurrentTournement: () => void
     updateTournementDate: (date: string) => void
     updateTournementName: (name: string) => void
     addTournementPlayer: (name: string, score: number) => void
