@@ -1,86 +1,27 @@
-import {
-    ChangeEvent,
-    MouseEvent,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react'
-import { Player, Players, Tournement } from '../Types'
+import { ChangeEvent, MouseEvent, useCallback } from 'react'
 import PlayersList from './PlayersList'
 import PlayerForm from './PlayerForm'
+import { useDataContext } from '../DataContext'
 
-const EditTournement: React.FC<{
-    currentTournement: Tournement
-    saveTournement: (tournement: Tournement) => void
-    deleteTournement: (id: string) => void
-    resetTournement: () => void
-}> = ({
-    currentTournement,
-    saveTournement,
-    deleteTournement,
-    resetTournement,
-}) => {
-    const id = currentTournement.id
-    const [date, setDate] = useState<string>('')
-    const [name, setName] = useState<string>('')
-    const [players, setPlayers] = useState<Players>([])
-    const [currentPlayer, setCurrentPlayer] = useState<Player>()
-
-    useEffect(() => {
-        setDate(currentTournement.date)
-        setName(currentTournement.name)
-        setPlayers(currentTournement.players)
-    }, [currentTournement, setDate, setName, setPlayers])
-
-    const addOrEditPlayer = useCallback(
-        (newOrExistingPlayer: Player) => {
-            if (players.find((c) => c.id === newOrExistingPlayer.id)) {
-                setPlayers((players) =>
-                    players.map((c) =>
-                        c.id === newOrExistingPlayer.id
-                            ? {
-                                  ...c,
-                                  name: newOrExistingPlayer.name,
-                                  score: newOrExistingPlayer.score,
-                              }
-                            : c
-                    )
-                )
-            } else {
-                setPlayers((players) => players.concat(newOrExistingPlayer))
-            }
-            setCurrentPlayer(undefined)
-        },
-        [players, setPlayers]
-    )
-
-    const editPlayer = useCallback(
-        (player: Player) => {
-            setCurrentPlayer(player)
-        },
-        [setCurrentPlayer]
-    )
-
-    const delPlayer = useCallback(
-        (idToRemove: string) => {
-            setPlayers((players) =>
-                players.filter(({ id }) => id !== idToRemove)
-            )
-        },
-        [setPlayers]
-    )
-
-    useEffect(() => {
-        saveTournement({ id, date, name, players })
-    }, [id, date, name, players])
+const EditTournement = () => {
+    const {
+        currentTournement,
+        resetCurrentTournement,
+        deleteTournement,
+        updateTournementDate,
+        updateTournementName,
+    } = useDataContext()
+    const id = currentTournement?.id ?? ''
+    const date = currentTournement?.date ?? ''
+    const name = currentTournement?.name ?? ''
 
     const onCloseClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
             e.preventDefault()
             e.stopPropagation()
-            resetTournement()
+            resetCurrentTournement()
         },
-        [resetTournement]
+        [resetCurrentTournement]
     )
 
     const onDeleteClick = useCallback(
@@ -97,19 +38,20 @@ const EditTournement: React.FC<{
     const onDateChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             try {
-                setDate(e.target.value)
+                updateTournementDate(e.target.value)
             } catch (error) {
-                console.warn('failed to parse date', e.target.value)
+                console.warn('failed to parse date', e.target.value, error)
             }
         },
-        [setDate]
+        [updateTournementDate]
     )
     const onNameChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            setName(e.target.value)
+            updateTournementName(e.target.value)
         },
-        [setName]
+        [updateTournementName]
     )
+    if (!currentTournement) return <></>
 
     return (
         <div
@@ -140,15 +82,8 @@ const EditTournement: React.FC<{
                     />
                 </fieldset>
             </form>
-            <PlayerForm
-                addOrEditPlayer={addOrEditPlayer}
-                currentPlayer={currentPlayer}
-            />
-            <PlayersList
-                players={players}
-                delPlayer={delPlayer}
-                editPlayer={editPlayer}
-            />
+            <PlayerForm />
+            <PlayersList />
             <button onClick={onDeleteClick}>🗑️ delete</button>
             <button onClick={onCloseClick}>✖️ close</button>
         </div>

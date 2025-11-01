@@ -1,16 +1,17 @@
 import { MouseEvent, useCallback } from 'react'
-import { Tournement, Tournements } from '../Types'
+import { Tournement } from '../Types'
+import { useDataContext } from '../DataContext'
 
 const TournementPoint: React.FC<{
     tournement: Tournement
-    onSetTournement: (tournementId: string) => void
-}> = ({ tournement, onSetTournement }) => {
+}> = ({ tournement }) => {
+    const { setCurrentTournement } = useDataContext()
     const onDivClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
-            onSetTournement(tournement.id)
+            setCurrentTournement(tournement.id)
         },
-        [onSetTournement]
+        [setCurrentTournement, tournement.id]
     )
 
     const date = new Date(Date.parse(tournement.date))
@@ -28,15 +29,16 @@ const TournementPoint: React.FC<{
     )
 }
 
-const HistoryLine: React.FC<{
-    tournements: Tournements
-    onSetTournement: (tournementId: string) => void
-    onAddTournement: () => void
-}> = ({ tournements, onSetTournement, onAddTournement }) => {
-    const onPlusClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation()
-        onAddTournement()
-    }, [])
+const HistoryLine = () => {
+    const { tournements, addTournement } = useDataContext()
+
+    const onPlusClick = useCallback(
+        (e: MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation()
+            addTournement()
+        },
+        [addTournement]
+    )
 
     return (
         <div
@@ -46,18 +48,9 @@ const HistoryLine: React.FC<{
                 overflowX: 'auto',
             }}
         >
-            {tournements
-                .sort(
-                    (a, b) =>
-                        new Date(a.date).getTime() - new Date(b.date).getTime()
-                )
-                .map((tournement) => (
-                    <TournementPoint
-                        key={tournement.id}
-                        tournement={tournement}
-                        onSetTournement={onSetTournement}
-                    />
-                ))}
+            {tournements.map((tournement) => (
+                <TournementPoint key={tournement.id} tournement={tournement} />
+            ))}
             <button onClick={onPlusClick}>➕ new tournement</button>
         </div>
     )

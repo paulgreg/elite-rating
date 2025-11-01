@@ -11,9 +11,15 @@
   },
   "dependencies": {
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.3",
+    "react-yjs": "^2.0.1",
+    "y-indexeddb": "^9.0.12",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@typescript-eslint/eslint-plugin": "^8.44.0",
@@ -22,7 +28,9 @@
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.5.0",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.46.2",
     "vite": "^7.1.6"
   }
 }

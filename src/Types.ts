@@ -1,3 +1,5 @@
+import * as Y from 'yjs'
+
 export type Player = {
     id: string
     name: string
@@ -14,3 +16,7 @@ export type Tournement = {
 }
 
 export type Tournements = Array<Tournement>
+
+export type YPlayer = string | number
+
+export type YTournement = string | Y.Array<Y.Map<YPlayer>>

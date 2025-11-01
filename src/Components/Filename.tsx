@@ -21,8 +21,8 @@ const Filename: React.FC<{
         (e: FormEvent) => {
             e.preventDefault()
             e.stopPropagation()
-            onLoadFilename(filename)
             localStorage.setItem(LOCALSTORAGE_FILEMAME_KEY, filename)
+            onLoadFilename(filename)
         },
         [filename, onLoadFilename]
     )
