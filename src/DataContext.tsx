@@ -12,8 +12,7 @@ export type DataContextType = {
     updateTournementDate: (date: string) => void
     updateTournementName: (name: string) => void
     addTournementPlayer: (name: string, score: number) => void
-    updateTournementPlayerName: (id: string, name: string) => void
-    updateTournementPlayerScore: (id: string, score: number) => void
+    updateTournementPlayer: (id: string, name: string, score: number) => void
     deleteTournementPlayer: (id: string) => void
 }
 

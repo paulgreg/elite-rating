@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback } from 'react'
+import { MouseEvent, useRef, useState } from 'react'
 import { Player } from '../Types'
 import { useDataContext } from '../DataContext'
 
@@ -6,36 +6,27 @@ const Row: React.FC<{
     player: Player
     position: number
 }> = ({ player, position }) => {
-    const {
-        deleteTournementPlayer,
-        updateTournementPlayerName,
-        updateTournementPlayerScore,
-    } = useDataContext()
+    const { deleteTournementPlayer, updateTournementPlayer } = useDataContext()
 
-    const onTraskClick = useCallback(
-        (player: Player) => (e: MouseEvent<HTMLSpanElement>) => {
+    const nameRef = useRef<HTMLInputElement>(null)
+    const scoreRef = useRef<HTMLInputElement>(null)
+    const [hasChanged, setHasChanged] = useState(false)
+
+    const onTraskClick =
+        (player: Player) => (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             if (confirm(`Are you sure to delete ${player.name} ?`)) {
                 deleteTournementPlayer(player.id)
             }
-        },
-        [deleteTournementPlayer]
-    )
+        }
 
-    const onNameChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            const name = e.target.value
-            updateTournementPlayerName(player.id, name)
-        },
-        [player.id, updateTournementPlayerName]
-    )
-    const onScoreChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            const score = e.target.value ?? '0'
-            updateTournementPlayerScore(player.id, Number.parseFloat(score))
-        },
-        [player.id, updateTournementPlayerScore]
-    )
+    const onSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        const name = nameRef.current?.value ?? ''
+        const score = Number.parseFloat(scoreRef.current?.value ?? '0')
+        updateTournementPlayer(player.id, name, score)
+        setHasChanged(false)
+    }
 
     return (
         <>
@@ -44,10 +35,11 @@ const Row: React.FC<{
                 <input
                     type="text"
                     placeholder="name"
+                    ref={nameRef}
                     required
                     style={{ width: '10em' }}
                     defaultValue={player.name}
-                    onBlur={onNameChange}
+                    onChange={() => setHasChanged(true)}
                 />
             </span>
             <span>
@@ -55,12 +47,20 @@ const Row: React.FC<{
                     type="number"
                     step="0.01"
                     placeholder="score"
+                    ref={scoreRef}
                     required
                     style={{ width: '5em' }}
                     defaultValue={player.score}
-                    onBlur={onScoreChange}
+                    onChange={() => setHasChanged(true)}
                 />
             </span>
+            <button
+                style={{ cursor: 'pointer' }}
+                onClick={onSaveClick}
+                disabled={!hasChanged}
+            >
+                ✅ save
+            </button>
             <button
                 style={{ cursor: 'pointer' }}
                 onClick={onTraskClick(player)}
@@ -82,7 +82,7 @@ const PlayersList = () => {
         <div
             style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 2fr 1fr 1fr',
+                gridTemplateColumns: '1fr 2fr 1fr 1fr 1fr',
                 margin: '1em auto',
                 border: '2px solid gold',
                 padding: '.5em',

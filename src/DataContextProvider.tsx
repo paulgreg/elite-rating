@@ -151,8 +151,8 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
         [yCurrentTournement]
     )
 
-    const updateTournementPlayerName = useCallback(
-        (id: string, name: string) => {
+    const updateTournementPlayer = useCallback(
+        (id: string, name: string, score: number) => {
             if (!yCurrentTournement) return
             const yPlayers = yCurrentTournement.get('players') as Y.Array<
                 Y.Map<YPlayer>
@@ -161,22 +161,6 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             const yPlayer = players.find((p) => p.get('id') === id)
             if (yPlayer) {
                 yPlayer.set('name', name)
-            } else {
-                console.error('player not found')
-            }
-        },
-        [yCurrentTournement]
-    )
-
-    const updateTournementPlayerScore = useCallback(
-        (id: string, score: number) => {
-            if (!yCurrentTournement) return
-            const yPlayers = yCurrentTournement.get('players') as Y.Array<
-                Y.Map<YPlayer>
-            >
-            const players = yPlayers.toArray()
-            const yPlayer = players.find((p) => p.get('id') === id)
-            if (yPlayer) {
                 yPlayer.set('score', score)
             } else {
                 console.error('player not found')
@@ -214,8 +198,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             updateTournementDate,
             updateTournementName,
             addTournementPlayer,
-            updateTournementPlayerName,
-            updateTournementPlayerScore,
+            updateTournementPlayer,
             deleteTournementPlayer,
         }),
         [
@@ -229,8 +212,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             updateTournementDate,
             updateTournementName,
             addTournementPlayer,
-            updateTournementPlayerName,
-            updateTournementPlayerScore,
+            updateTournementPlayer,
             deleteTournementPlayer,
         ]
     )
