@@ -61,13 +61,16 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
         }
     }, [guid, yDoc])
 
-    const setCurrentTournement = useCallback((tournementId: string) => {
-        setCurrentTournementId(tournementId)
-    }, [])
+    const setCurrentTournement = useCallback(
+        (tournementId: string) => {
+            setCurrentTournementId(tournementId)
+        },
+        [setCurrentTournementId]
+    )
 
     const resetCurrentTournement = useCallback(() => {
         setCurrentTournementId(undefined)
-    }, [])
+    }, [setCurrentTournementId])
 
     const duplicateCurrentTournement = useCallback(() => {
         if (!currentTournement) return

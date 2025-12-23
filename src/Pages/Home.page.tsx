@@ -43,6 +43,18 @@ const HomePage = () => {
         [navigate]
     )
 
+    const requestRawListNames = async (): Promise<string[]> => {
+        try {
+            const url = `${settings.crdtUrl}list?prefix=${PREFIX}&secret=${settings.secret}`
+            const response = await fetch(url)
+            if (response.ok) return await response.json()
+            return []
+        } catch (e) {
+            console.error(e)
+            return []
+        }
+    }
+
     const fillListNames = useCallback(async () => {
         if (settings.saveOnline) {
             const lists = await requestRawListNames()
@@ -51,15 +63,8 @@ const HomePage = () => {
     }, [])
 
     useEffect(() => {
-        fillListNames()
+        setTimeout(fillListNames, 0)
     }, [fillListNames])
-
-    const requestRawListNames = async (): Promise<string[]> => {
-        const url = `${settings.crdtUrl}list?prefix=${PREFIX}&secret=${settings.secret}`
-        const response = await fetch(url)
-        if (response.ok) return await response.json()
-        return []
-    }
 
     const deleteList = async (docName: string) => {
         const url = `${settings.crdtUrl}del?doc=${encodeURIComponent(
