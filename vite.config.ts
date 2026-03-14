@@ -7,5 +7,11 @@ export default defineConfig({
         sourcemap: true,
     },
     base: './',
-    plugins: [react()],
+    plugins: [
+        react({
+            babel: {
+                plugins: ['babel-plugin-react-compiler'],
+            },
+        }),
+    ],
 })
