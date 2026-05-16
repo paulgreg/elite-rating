@@ -3,12 +3,12 @@ import settings from './settings.json'
 import { DataContext } from './DataContext'
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
-import { WebsocketProvider } from 'y-websocket'
 import { useY } from 'react-yjs'
 import { PREFIX } from './constants'
 import { slugify } from './utils/string'
 import { Tournements, YPlayer, YTournement } from './Types'
 import { generateUniqueId } from './utils/id'
+import { HocuspocusProvider } from '@hocuspocus/provider'
 
 interface DataContextProviderPropsType {
     name: string
@@ -28,7 +28,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
     >()
 
     const persistence = useRef<IndexeddbPersistence>(null)
-    const provider = useRef<WebsocketProvider>(null)
+    const provider = useRef<HocuspocusProvider>(null)
 
     const yCurrentTournement = currentTournementId
         ? yTournements
@@ -49,14 +49,12 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
     useEffect(() => {
         persistence.current = new IndexeddbPersistence(guid, yDoc)
         if (settings.saveOnline && settings.crdtUrl) {
-            provider.current = new WebsocketProvider(
-                settings.crdtUrl,
-                guid,
-                yDoc,
-                {
-                    params: { secret: settings.secret },
-                }
-            )
+            provider.current = new HocuspocusProvider({
+                url: `${settings.crdtUrl}ws`,
+                name: guid,
+                document: yDoc,
+                token: settings.secret,
+            })
             return () => provider.current?.disconnect()
         }
     }, [guid, yDoc])

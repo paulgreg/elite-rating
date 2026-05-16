@@ -12,9 +12,7 @@ if (container) {
     root.render(
         <React.StrictMode>
             <BrowserRouter
-                basename={
-                    process.env.NODE_ENV === 'production' ? '/elite-rating' : ''
-                }
+                basename={import.meta.env.PROD ? '/elite-rating' : ''}
             >
                 <Routes>
                     <Route path="/" element={<App />}>

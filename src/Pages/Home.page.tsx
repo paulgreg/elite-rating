@@ -45,7 +45,7 @@ const HomePage = () => {
 
     const requestRawListNames = async (): Promise<string[]> => {
         try {
-            const url = `${settings.crdtUrl}list?prefix=${PREFIX}&secret=${settings.secret}`
+            const url = `${settings.crdtUrl}api/list?prefix=${PREFIX}&secret=${settings.secret}`
             const response = await fetch(url)
             if (response.ok) return await response.json()
             return []
@@ -67,7 +67,7 @@ const HomePage = () => {
     }, [fillListNames])
 
     const deleteList = async (docName: string) => {
-        const url = `${settings.crdtUrl}del?doc=${encodeURIComponent(
+        const url = `${settings.crdtUrl}api/del?doc=${encodeURIComponent(
             docName
         )}&secret=${settings.secret}`
         const response = await fetch(url)
