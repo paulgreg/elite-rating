@@ -1,5 +1,6 @@
 import { FormEvent, useCallback, useRef } from 'react'
 import { useDataContext } from '../DataContext'
+import { isDecimalNumber } from '../utils/number'
 
 const PlayerForm = () => {
     const { addTournementPlayer } = useDataContext()
@@ -10,6 +11,10 @@ const PlayerForm = () => {
         (e: FormEvent) => {
             e.preventDefault()
             if (nameRef?.current?.value && scoreRef?.current?.value) {
+                if (!isDecimalNumber(scoreRef.current.value)) {
+                    alert('Bad number')
+                    return
+                }
                 addTournementPlayer(
                     nameRef.current.value,
                     Number.parseFloat(scoreRef.current.value)

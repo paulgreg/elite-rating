@@ -1,6 +1,7 @@
 import { MouseEvent, useRef, useState } from 'react'
 import { Player } from '../Types'
 import { useDataContext } from '../DataContext'
+import { isDecimalNumber } from '../utils/number'
 
 const Row: React.FC<{
     player: Player
@@ -23,6 +24,10 @@ const Row: React.FC<{
     const onSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         const name = nameRef.current?.value ?? ''
+        if (!isDecimalNumber(scoreRef.current?.value ?? '')) {
+            alert('Bad number')
+            return
+        }
         const score = Number.parseFloat(scoreRef.current?.value ?? '0')
         updateTournementPlayer(player.id, name, score)
         setHasChanged(false)
