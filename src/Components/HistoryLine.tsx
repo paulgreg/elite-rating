@@ -1,10 +1,13 @@
-import { MouseEvent, useCallback } from 'react'
+import { ChangeEvent, MouseEvent, useCallback, useState } from 'react'
 import { Tournement } from '../Types'
 import { useDataContext } from '../DataContext'
 
 const TournementPoint: React.FC<{
     tournement: Tournement
-}> = ({ tournement }) => {
+    isSelected: boolean
+    isDisabled: boolean
+    onSelectChange: (tournementId: string, isSelected: boolean) => void
+}> = ({ tournement, isSelected, isDisabled, onSelectChange }) => {
     const { setCurrentTournement } = useDataContext()
     const onDivClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
@@ -14,23 +17,44 @@ const TournementPoint: React.FC<{
         [setCurrentTournement, tournement.id]
     )
 
+    const onCheckboxChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            e.stopPropagation()
+            onSelectChange(tournement.id, e.target.checked)
+        },
+        [onSelectChange, tournement.id]
+    )
+
     const date = new Date(Date.parse(tournement.date))
     return (
-        <button
-            onClick={onDivClick}
+        <div
             style={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'column-reverse',
+                alignItems: 'center',
+                gap: '.25em',
             }}
         >
-            <span>{date.toLocaleDateString('fr-FR')}</span>
-            <span>{tournement.name}</span>
-        </button>
+            <button onClick={onDivClick}>
+                <span>{date.toLocaleDateString('fr-FR')}</span>
+                <span>{tournement.name}</span>
+            </button>
+            <input
+                type="checkbox"
+                checked={isSelected}
+                disabled={isDisabled}
+                onChange={onCheckboxChange}
+                aria-label={`select ${tournement.name}`}
+            />
+        </div>
     )
 }
 
 const HistoryLine = () => {
-    const { tournements, addTournement } = useDataContext()
+    const { tournements, addTournement, mergeTournements } = useDataContext()
+    const [selectedTournementIds, setSelectedTournementIds] = useState<string[]>(
+        []
+    )
 
     const onPlusClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
@@ -38,6 +62,32 @@ const HistoryLine = () => {
             addTournement()
         },
         [addTournement]
+    )
+
+    const onSelectChange = useCallback(
+        (tournementId: string, isSelected: boolean) => {
+            setSelectedTournementIds((ids) => {
+                if (isSelected) {
+                    if (ids.includes(tournementId) || ids.length >= 2) return ids
+                    return [...ids, tournementId]
+                }
+                return ids.filter((id) => id !== tournementId)
+            })
+        },
+        []
+    )
+
+    const onMergeClick = useCallback(
+        (e: MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation()
+            if (selectedTournementIds.length !== 2) return
+            mergeTournements([
+                selectedTournementIds[0],
+                selectedTournementIds[1],
+            ])
+            setSelectedTournementIds([])
+        },
+        [mergeTournements, selectedTournementIds]
     )
 
     return (
@@ -49,9 +99,24 @@ const HistoryLine = () => {
             }}
         >
             {tournements.map((tournement) => (
-                <TournementPoint key={tournement.id} tournement={tournement} />
+                <TournementPoint
+                    key={tournement.id}
+                    tournement={tournement}
+                    isSelected={selectedTournementIds.includes(tournement.id)}
+                    isDisabled={
+                        selectedTournementIds.length >= 2 &&
+                        !selectedTournementIds.includes(tournement.id)
+                    }
+                    onSelectChange={onSelectChange}
+                />
             ))}
             <button onClick={onPlusClick}>➕ new tournement</button>
+            <button
+                onClick={onMergeClick}
+                disabled={selectedTournementIds.length !== 2}
+            >
+                merge
+            </button>
         </div>
     )
 }

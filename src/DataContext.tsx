@@ -5,6 +5,7 @@ export type DataContextType = {
     tournements: Tournements
     currentTournement?: Tournement
     addTournement: () => void
+    mergeTournements: (tournementIds: [string, string]) => void
     deleteTournement: (tournementId: string) => void
     setCurrentTournement: (tournementId: string) => void
     resetCurrentTournement: () => void

@@ -9,6 +9,7 @@ import { slugify } from './utils/string'
 import { Tournements, YPlayer, YTournement } from './Types'
 import { generateUniqueId } from './utils/id'
 import { HocuspocusProvider } from '@hocuspocus/provider'
+import { mergePlayersByName } from './utils/tournement'
 
 interface DataContextProviderPropsType {
     name: string
@@ -101,6 +102,43 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
         yTournements.push([yTournement])
     }, [yTournements])
 
+    const mergeTournements = useCallback(
+        (tournementIds: [string, string]) => {
+            const [firstId, secondId] = tournementIds
+            const firstTournement = tournements.find(({ id }) => id === firstId)
+            const secondTournement = tournements.find(
+                ({ id }) => id === secondId
+            )
+
+            if (!firstTournement || !secondTournement) return
+
+            const mergedPlayers = mergePlayersByName(
+                firstTournement.players,
+                secondTournement.players
+            )
+            const yPlayers = new Y.Array<Y.Map<YPlayer>>()
+            const yMergedPlayers = mergedPlayers.map(({ name, score }) => {
+                const yPlayer = new Y.Map<YPlayer>()
+                yPlayer.set('id', generateUniqueId())
+                yPlayer.set('name', name)
+                yPlayer.set('score', score)
+                return yPlayer
+            })
+            yPlayers.push(yMergedPlayers)
+
+            const tournementId = generateUniqueId()
+            const yTournement = new Y.Map<YTournement>()
+            yTournement.set('id', tournementId)
+            yTournement.set('name', 'new merged')
+            yTournement.set('date', firstTournement.date)
+            yTournement.set('players', yPlayers)
+
+            yTournements.push([yTournement])
+            setCurrentTournementId(tournementId)
+        },
+        [setCurrentTournementId, tournements, yTournements]
+    )
+
     const deleteTournement = useCallback(
         (tournementId: string) => {
             const idx = yTournements
@@ -189,6 +227,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             tournements,
             currentTournement,
             addTournement,
+            mergeTournements,
             deleteTournement,
             setCurrentTournement,
             resetCurrentTournement,
@@ -203,6 +242,7 @@ const DataContextProvider: React.FC<DataContextProviderPropsType> = ({
             tournements,
             currentTournement,
             addTournement,
+            mergeTournements,
             deleteTournement,
             setCurrentTournement,
             resetCurrentTournement,
